@@ -4,24 +4,15 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 
-// Correctly formatted connection string
 const uri = process.env.DB_URI;
 
-mongoose.connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+mongoose.connect(uri)
 .then(() => console.log('Connected to Database'))
 .catch(err => console.error('Database connection error:', err));
 
-
-// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//app.use('/api/books', require('./routes/route'));
-
-// Route for root URL
 app.get('/', async (req, res) => {
     try {
         res('Hello world');

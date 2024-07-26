@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models/books');
 
+function convertLocalDate(date) {
+    return new Date(date.getTime() + 5 * 60 * 60 * 1000);
+}
 // Get all books
 router.get('/', async (req, res) => {
     try {
@@ -29,8 +32,8 @@ router.post('/', async (req, res) => {
         name: req.body.name,
         author: req.body.author,
         publishedYear: req.body.publishedYear,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: convertLocalDate(new Date()),
+        updatedAt: convertLocalDate(new Date())
     });
     try {
         const newBook = await book.save();
@@ -51,7 +54,7 @@ router.put('/:id', getBook, async (req, res) => {
     if (req.body.publishedYear != null) {
         res.book.publishedYear = req.body.publishedYear;
     }
-    res.book.updatedAt = new Date();
+    res.book.updatedAt = convertLocalDate(new Date());
     try {
         const updatedBook = await res.book.save();
         res.json(updatedBook);
