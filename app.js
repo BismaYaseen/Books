@@ -24,6 +24,9 @@ app.get('/', async (req, res) => {
 const booksRouter = require('./routes/route');
 app.use('/books', booksRouter);
 
+const authRouter = require('./routes/auth');
+app.use('/auth', authRouter);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

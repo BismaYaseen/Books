@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models/books');
+const auth = require('../middleware/auth');
 
 function convertLocalDate(date) {
     return new Date(date.getTime() + 5 * 60 * 60 * 1000);
 }
 // Get all books
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
         const books = await Book.find();
         res.json(books);
@@ -16,7 +17,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get a single book by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id',auth, async (req, res) => {
     try {
         const book = await Book.findById(req.params.id);
         if (!book) return res.status(404).json({ message: 'Book not found' });
@@ -27,7 +28,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Add a new book
-router.post('/', async (req, res) => {
+router.post('/',auth, async (req, res) => {
     const book = new Book({
         name: req.body.name,
         author: req.body.author,
@@ -44,7 +45,7 @@ router.post('/', async (req, res) => {
 });
 
 // Update book's content
-router.put('/:id', getBook, async (req, res) => {
+router.put('/:id',auth, getBook, async (req, res) => {
     if (req.body.name != null) {
         res.book.name = req.body.name;
     }
@@ -64,7 +65,7 @@ router.put('/:id', getBook, async (req, res) => {
 });
 
 // Delete a book by ID
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',auth, async (req, res) => {
     try {
         const result = await Book.findByIdAndDelete(req.params.id);
         if (!result) {
